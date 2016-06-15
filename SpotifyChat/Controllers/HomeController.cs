@@ -17,6 +17,7 @@ namespace SpotifyChat.Controllers
         private List<FullTrack> _savedTracks;
         private List<SimplePlaylist> _playlist;
 
+        
         public ActionResult Index()
         {
             ViewBag.AuthUri = GetAuthUri();

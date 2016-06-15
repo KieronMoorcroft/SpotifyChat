@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Google;
+using Owin.Security.Providers.Spotify;
 using Owin;
 using SpotifyChat.Models;
 
@@ -63,6 +63,26 @@ namespace SpotifyChat
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+
+            app.UseSpotifyAuthentication(new SpotifyAuthenticationOptions()
+            {
+                ClientId = "f2bd29ea842f4fde8b866fd15de6f3e7",
+                ClientSecret = "6d715644a6454a479321fea2e474c646",
+                CallbackPath = new PathString("/localhost:58158/Home/AuthResponse"),
+                SignInAsAuthenticationType = "https://accounts.spotify.com/authorize",
+
+
+            });
+
+            app.UseSpotifyAuthentication(new SpotifyAuthenticationOptions()
+            {
+                ClientId = "f2bd29ea842f4fde8b866fd15de6f3e7",
+                ClientSecret = "6d715644a6454a479321fea2e474c646",
+                CallbackPath = new PathString("/localhost:58158/Home/AuthResponse"),
+                SignInAsAuthenticationType = "https://accounts.spotify.com/authorize",
+
+
+            });
         }
     }
 }
