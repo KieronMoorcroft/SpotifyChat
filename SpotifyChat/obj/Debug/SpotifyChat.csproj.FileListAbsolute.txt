@@ -117,3 +117,7 @@ D:\MVC Development\SpotifyChat\SpotifyChat\bin\Owin.Security.Providers.WordPress
 D:\MVC Development\SpotifyChat\SpotifyChat\bin\Owin.Security.Providers.Xing.dll
 D:\MVC Development\SpotifyChat\SpotifyChat\bin\Owin.Security.Providers.Yahoo.dll
 D:\MVC Development\SpotifyChat\SpotifyChat\bin\Owin.Security.Providers.Yammer.dll
+D:\MVC Development\SpotifyChat\SpotifyChat\bin\Microsoft.AspNet.SignalR.Core.dll
+D:\MVC Development\SpotifyChat\SpotifyChat\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+D:\MVC Development\SpotifyChat\SpotifyChat\bin\Microsoft.AspNet.SignalR.Core.xml
+D:\MVC Development\SpotifyChat\SpotifyChat\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
