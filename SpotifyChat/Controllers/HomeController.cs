@@ -4,8 +4,12 @@ using SpotifyAPI.Web.Auth;
 using SpotifyAPI.Web.Models;
 using System.Collections.Generic;
 using SpotifyAPI.Web;
-using System.Linq;
 using SpotifyAPI.Web.Enums;
+using System.Threading.Tasks;
+using SpotifyChat.Models;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
 
 namespace SpotifyChat.Controllers
 {
@@ -15,18 +19,20 @@ namespace SpotifyChat.Controllers
         private ImplicitGrantAuth _auth;
         private PrivateProfile _profile;
         private List<FullTrack> _savedTracks;
-        private List<SimplePlaylist> _playlist;
+        private List<SpotifyWebAPI> playlists;
+        private SpotifyAccess spotify;
 
-        
         public ActionResult Index()
         {
+            PrivateProfile profile = new PrivateProfile();
+            SpotifyAccess spot = new SpotifyAccess();
             ViewBag.AuthUri = GetAuthUri();
-            
-            return View();
+            return View(spot);
         }
 
         public ActionResult AuthResponse(string access_token, string token_type, string expires_in, string state)
         {
+
             return View();
         }
 
@@ -50,7 +56,7 @@ namespace SpotifyChat.Controllers
             _savedTracks = new List<FullTrack>();
             _auth = new ImplicitGrantAuth
             {
-                RedirectUri = "http://localhost:58158/Home/AuthResponse",
+                RedirectUri = "~/localhost:58158/Home/AuthResponse",
                 ClientId = "f2bd29ea842f4fde8b866fd15de6f3e7",
                 Scope = Scope.UserReadPrivate | Scope.UserReadEmail | Scope.PlaylistReadPrivate | Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead | Scope.UserReadBirthdate | Scope.UserTopRead,
                 State = "XSS"
@@ -84,7 +90,5 @@ namespace SpotifyChat.Controllers
             };
 
         }
-
-
     }
 }

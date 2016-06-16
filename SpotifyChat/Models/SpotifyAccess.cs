@@ -16,7 +16,7 @@ namespace SpotifyChat.Models
         private SpotifyWebAPI _spotify;
         private PrivateProfile _profile;
 
-        private List<FullTrack> GetSavedTracks()
+        public List<FullTrack> GetSavedTracks()
         {
             Paging<SavedTrack> savedTracks = _spotify.GetSavedTracks();
             List<FullTrack> list = savedTracks.Items.Select(track => track.Track).ToList();
@@ -30,7 +30,7 @@ namespace SpotifyChat.Models
             return list;
         }
 
-        private List<SimplePlaylist> GetPlaylists()
+        public List<SimplePlaylist> GetPlaylists()
         {
             Paging<SimplePlaylist> playlists = _spotify.GetUserPlaylists(_profile.Id);
             List<SimplePlaylist> list = playlists.Items.ToList();
