@@ -7,8 +7,9 @@ using Owin.Security.Providers.Spotify;
 using Owin.Security.Providers.SoundCloud;
 using Owin;
 using SpotifyChat.Models;
-
-
+using Owin.Security.Providers.Spotify.Provider;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace SpotifyChat
 {
@@ -70,26 +71,41 @@ namespace SpotifyChat
             //    ClientSecret = ""
             //});
 
+
             app.UseSpotifyAuthentication(new SpotifyAuthenticationOptions()
             {
                 ClientId = "f2bd29ea842f4fde8b866fd15de6f3e7",
                 ClientSecret = "6d715644a6454a479321fea2e474c646",
-                
-                SignInAsAuthenticationType = "https://accounts.spotify.com/authorize",
-                
-               
+
+                Provider = new SpotifyAuthenticationProvider
+                {
+                    OnAuthenticated = context =>
+                    {
+                        context.Identity.AddClaim(new Claim("urn:tokens:spotify:accesstoken", context.AccessToken));
+
+                        string spotifyUserId = context.Id;
+
+                        string spotifyUserName = context.Name;
+
+                        string spotifyProfileImage = context.ProfilePicture;
+
+                        var serializedUser = context.User;
+
+                        return Task.FromResult(true);
+                    }
+                }
 
             });
 
             app.UseSoundCloudAuthentication(new SoundCloudAuthenticationOptions()
             {
                 
-
+                
                 ClientId = "d05fd9f7755fe2749a369627981c9309",
                 ClientSecret = "2b490a61a4b0081dd126703be51f605b",
                 SignInAsAuthenticationType = "https://soundcloud.com/connect",
-                
-                   
+                CallbackPath = new PathString("/Home/AuthResponse")
+
             });
 
             

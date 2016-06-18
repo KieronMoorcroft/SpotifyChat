@@ -380,6 +380,27 @@ namespace SpotifyChat.Controllers
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
+                        ClaimsIdentity claimsIdenity =
+                            await AuthenticationManager.GetExternalIdentityAsync(DefaultAuthenticationTypes.ExternalCookie);
+
+                        if (claimsIdenity != null)
+                        {
+                            //Retrieve the existing claims
+                            var currentClaims = await UserManager.GetClaimsAsync(user.Id);
+
+                            //Get the list of access token related claims from the identity
+                            var tokenClaims = claimsIdenity.Claims.Where(c => c.Type.StartsWith("urn:tokens:"));
+
+                            //Save teh access tokens related claims
+                            foreach (var tokenClaim  in tokenClaims)
+                            {
+                                if (!currentClaims.Contains(tokenClaim))
+                                {
+                                    await UserManager.AddClaimAsync(user.Id, tokenClaim);
+                                }
+                            }
+                        }
+
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }

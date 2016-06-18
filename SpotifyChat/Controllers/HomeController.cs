@@ -10,24 +10,28 @@ using SpotifyChat.Models;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Linq;
 
 namespace SpotifyChat.Controllers
 {
     public class HomeController : Controller
     {
-        private SpotifyWebAPI _spotify;
-        private ImplicitGrantAuth _auth;
-        private PrivateProfile _profile;
-        private List<FullTrack> _savedTracks;
-        private List<SpotifyWebAPI> playlists;
-        private SpotifyAccess spotify;
+
 
         public ActionResult Index()
         {
-            PrivateProfile profile = new PrivateProfile();
-            SpotifyAccess spot = new SpotifyAccess();
-            ViewBag.AuthUri = GetAuthUri();
-            return View(spot);
+            var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
+            if (claimsIdentity != null)
+            {
+                var spotifyAccessToken = claimsIdentity.Claims.FirstOrDefault(x => x.Type == "urn:tokens:spotify:accesstoken");
+
+                if (spotifyAccessToken != null)
+                {
+                    ViewBag.SpotifyAccessToken = spotifyAccessToken.Value;
+                }
+            }
+            return View();
         }
 
         public ActionResult AuthResponse(string access_token, string token_type, string expires_in, string state)
@@ -51,44 +55,5 @@ namespace SpotifyChat.Controllers
         }
 
 
-        public dynamic GetAuthUri()
-        {
-            _savedTracks = new List<FullTrack>();
-            _auth = new ImplicitGrantAuth
-            {
-                RedirectUri = "~/localhost:58158/Home/AuthResponse",
-                ClientId = "f2bd29ea842f4fde8b866fd15de6f3e7",
-                Scope = Scope.UserReadPrivate | Scope.UserReadEmail | Scope.PlaylistReadPrivate | Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead | Scope.UserReadBirthdate | Scope.UserTopRead,
-                State = "XSS"
-            };
-
-            _auth.OnResponseReceivedEvent += _auth_OnResponseReceivedEvent;
-
-            return _auth;
-        }
-
-        private void _auth_OnResponseReceivedEvent(Token token, string state)
-        {
-            _auth.StopHttpServer();
-
-            if (state != "XSS")
-            {
-                Console.WriteLine(@"Wrong state received.", @"SpotifyWeb API Error");
-                return;
-            }
-            if (token.Error != null)
-            {
-                Console.WriteLine($"Error: {token.Error}", @"SpotifyWeb API Error");
-                return;
-            }
-
-            _spotify = new SpotifyWebAPI
-            {
-                UseAuth = true,
-                AccessToken = token.AccessToken,
-                TokenType = token.TokenType
-            };
-
-        }
     }
 }

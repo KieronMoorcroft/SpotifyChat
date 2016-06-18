@@ -11,9 +11,26 @@
     <meta charset="utf-8" />
 </head>
 
+
+
+
 <body ng-app="chat-app">
+
+    <div class="row">
+
+        <div class="col-md-4">
+            @if (ViewBag.SpotifyAccessToken == null)
+            {
+                <p>Note Spotify token found</p>
+            }
+            else
+            {
+                <p>Spotify Acess Token @ViewBag.SpotifyAccessToken</p>
+            }
+        </div>
+    </div>
+
     <br />
-    <p>@ViewBag.AuthUri</p>
     <div ng-controller="ChatController">
         <br />
         <div>
