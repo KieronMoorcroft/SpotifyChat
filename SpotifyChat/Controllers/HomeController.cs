@@ -17,10 +17,16 @@ namespace SpotifyChat.Controllers
 {
     public class HomeController : Controller
     {
-
-
+        public SpotifyWebAPI _spotify;
         public ActionResult Index()
         {
+            //var user = _spotify.AccessToken;
+            //var playlist = _spotify.GetUserPlaylists(user);
+
+            //if (playlist != null)
+            //{
+            //    ViewBag.Playlist = playlist;
+            //}
             var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
             if (claimsIdentity != null)
             {
@@ -29,14 +35,18 @@ namespace SpotifyChat.Controllers
                 if (spotifyAccessToken != null)
                 {
                     ViewBag.SpotifyAccessToken = spotifyAccessToken.Value;
+                    
+
                 }
             }
+       
+            
             return View();
         }
 
         public ActionResult AuthResponse(string access_token, string token_type, string expires_in, string state)
         {
-
+            
             return View();
         }
 

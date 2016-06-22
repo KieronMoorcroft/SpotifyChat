@@ -29,6 +29,18 @@
             }
         </div>
     </div>
+    
+    <div class="jumbotron">
+        @if (ViewBag.Playlist == null)
+        {
+            <p>No playlist here</p>
+        }
+        else
+        {
+            @ViewBag.Playlist
+        }
+        
+    </div>
 
     <br />
     <div ng-controller="ChatController">
@@ -52,6 +64,6 @@
     <script src="signalr/hubs"></script>
     <script src="Scripts/angular.js"></script>
     <script src="~/Scripts/sampleChat.js"></script>
-    
+
 </body>
 </html>
