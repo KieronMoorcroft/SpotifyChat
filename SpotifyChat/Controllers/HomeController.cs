@@ -6,27 +6,22 @@ using System.Collections.Generic;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Enums;
 using System.Threading.Tasks;
-using SpotifyChat.Models;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Linq;
-
+using SpotifyChat.Models;
 namespace SpotifyChat.Controllers
 {
     public class HomeController : Controller
     {
-        public SpotifyWebAPI _spotify;
+        private SpotifyWebAPI _spotify;
+        private PrivateProfile _profile;
+        
         public ActionResult Index()
         {
-            //var user = _spotify.AccessToken;
-            //var playlist = _spotify.GetUserPlaylists(user);
-
-            //if (playlist != null)
-            //{
-            //    ViewBag.Playlist = playlist;
-            //}
+            
             var claimsIdentity = HttpContext.User.Identity as ClaimsIdentity;
             if (claimsIdentity != null)
             {
@@ -39,8 +34,9 @@ namespace SpotifyChat.Controllers
 
                 }
             }
-       
-            
+            var savedTracks = GetSavedTracks();
+
+
             return View();
         }
 
@@ -64,6 +60,33 @@ namespace SpotifyChat.Controllers
             return View();
         }
 
+        public List<FullTrack> GetSavedTracks()
+        {
+            Paging<SavedTrack> savedTracks = _spotify.GetSavedTracks();
+            List<FullTrack> list = savedTracks.Items.Select(track => track.Track).ToList();
+
+            while (savedTracks.Next != null)
+            {
+                savedTracks = _spotify.GetSavedTracks(20, savedTracks.Offset + savedTracks.Limit);
+                list.AddRange(savedTracks.Items.Select(track => track.Track));
+            }
+
+            return list;
+        }
+
+        public List<SimplePlaylist> GetPlaylists()
+        {
+            Paging<SimplePlaylist> playlists = _spotify.GetUserPlaylists(_profile.Id);
+            List<SimplePlaylist> list = playlists.Items.ToList();
+
+            while (playlists.Next != null)
+            {
+                playlists = _spotify.GetUserPlaylists(_profile.Id, 20, playlists.Offset + playlists.Limit);
+                list.AddRange(playlists.Items);
+            }
+
+            return list;
+        }
 
     }
 }
